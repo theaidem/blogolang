@@ -6,6 +6,21 @@ import (
 	"log"
 )
 
+// TODO: redo design
+func GetSess() *db.Session {
+	options := db.ConnectOpts{
+		Address:  "localhost:28015",
+		Database: "blogolang",
+	}
+
+	sess, err := db.Connect(options)
+
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	return sess
+}
+
 func InitDB(cfg *config.Config) *db.Session {
 
 	options := db.ConnectOpts{
