@@ -18,8 +18,11 @@ func GetApp(cfg *config.Config) *martini.ClassicMartini {
 
 	server := martini.Classic()
 
-	server.Use(render.Renderer())
+	server.Use(render.Renderer(render.Options{
+		Layout: "layout",
+	}))
 	server.Use(sessions.Sessions("sid", store))
+	server.Use(martini.Static("static"))
 
 	sess := common.InitDB(cfg)
 	server.Map(cfg)

@@ -1,6 +1,7 @@
 package common
 
 import (
+	//"fmt"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
 )

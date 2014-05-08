@@ -2,6 +2,7 @@ package common
 
 import (
 	"app/config"
+	//"fmt"
 	db "github.com/dancannon/gorethink"
 	"log"
 )

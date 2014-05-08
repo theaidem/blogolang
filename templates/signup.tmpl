@@ -1,18 +1,33 @@
-<!DOCTYPE html>
-<html>
-  <body>
-    <ul>
-  	<li><a href="/">home</a></li>
-  	<li><a href="/signup">signup</a></li>
-  	<li><a href="/signin">signin</a></li>
-  	<li><a href="/signout">signout</a></li>
-  </ul>
-    <h2>Registration</h2>
-    <form method="POST">
-      <input type="email" placeholder="Email" name="email" /><br />
-      <input type="password" placeholder="Password" name="password" />
-      <input type="password" placeholder="Confirm Password" name="confirmpassword" />
-      <button>Register</button>
-    </form>
-  </body>
-</html>
+<form method="POST"  action="/signup" class="ui form segment">
+	 <div class="field">
+		<label>Email</label>
+		<div class="ui left labeled icon input">
+			<input type="email" placeholder="Email" name="email" />
+			<i class="user icon"></i>
+			<div class="ui corner label">
+				<i class="icon asterisk"></i>
+			</div>
+		</div>
+	</div> 
+	<div class="field">
+		<label>Password</label>
+		<div class="ui left labeled icon input">
+		 <input type="password" placeholder="Password" name="password" />
+			<i class="lock icon"></i>
+			<div class="ui corner label">
+				<i class="icon asterisk"></i>
+			</div>
+		</div>
+	</div>
+	<div class="field">
+		<label>Password</label>
+		<div class="ui left labeled icon input">
+		 <input type="password" placeholder="Confirm Password" name="confirmpassword" />
+			<i class="lock icon"></i>
+			<div class="ui corner label">
+				<i class="icon asterisk"></i>
+			</div>
+		</div>
+	</div>
+	<button class="ui blue submit button">Register</button>
+</form>
