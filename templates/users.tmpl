@@ -1,0 +1,12 @@
+<div class="ui selection list">
+	{{ range $key, $value := .users }}
+		<a class="item" href="/users/{{$value.Id}}">
+			<i class="circular large user icon"></i>
+			<div class="content">
+				<div class="header">{{ $value.Email}}</div>
+				{{ $value.Created}}
+			</div>
+		</a>
+	{{ end }}
+</div>
+

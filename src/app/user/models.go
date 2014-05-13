@@ -8,11 +8,11 @@ import (
 )
 
 type User struct {
-	Id            string `form:"-" gorethink:"id,omitempty"`
-	Email         string `form:"email" gorethink:"email"`
-	Password      string `form:"password" gorethink:"password"`
-	Created       time.Time
-	authenticated bool `form:"-" gorethink:"-"`
+	Id            string    `form:"-" gorethink:"id,omitempty"`
+	Email         string    `form:"email" gorethink:"email"`
+	Password      string    `form:"password" gorethink:"password"`
+	Created       time.Time `gorethink:"created"`
+	authenticated bool      `form:"-" gorethink:"-"`
 }
 
 var sess *db.Session

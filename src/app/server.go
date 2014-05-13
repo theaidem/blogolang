@@ -18,9 +18,7 @@ func GetApp(cfg *config.Config) *martini.ClassicMartini {
 
 	server := martini.Classic()
 
-	server.Use(render.Renderer(render.Options{
-		Layout: "layout",
-	}))
+	server.Use(render.Renderer(render.Options{Layout: "layout"}))
 	server.Use(sessions.Sessions("sid", store))
 	server.Use(martini.Static("static"))
 
@@ -40,6 +38,9 @@ func GetApp(cfg *config.Config) *martini.ClassicMartini {
 	server.Get("/signin", user.GetSignInHandler)
 	server.Post("/signin", binding.Bind(user.User{}), user.PostSignInHandler)
 	server.Get("/signout", sessionauth.LoginRequired, user.GetSignOutHandler)
+
+	server.Get("/users", binding.Bind(user.User{}), user.GetUserListHandler)
+	server.Get("/users/:id", binding.Bind(user.User{}), user.GetUserProfileHandler)
 
 	return server
 }

@@ -7,13 +7,11 @@ import (
 )
 
 func GetFrontHandler(user sessionauth.User, r render.Render) {
-	if user.IsAuthenticated() {
-		r.HTML(200, "home", user)
-		return
-	}
-	r.HTML(200, "home", nil)
+	arg_map := map[string]interface{}{"authuser": user}
+	r.HTML(200, "home", arg_map)
 }
 
-func GetAboutHandler() string {
-	return "About page"
+func GetAboutHandler(user sessionauth.User, r render.Render) {
+	arg_map := map[string]interface{}{"authuser": user}
+	r.HTML(200, "about", arg_map)
 }

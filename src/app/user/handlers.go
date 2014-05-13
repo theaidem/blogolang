@@ -4,6 +4,7 @@ import (
 	"code.google.com/p/go.crypto/bcrypt"
 	"fmt"
 	db "github.com/dancannon/gorethink"
+	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessionauth"
 	"github.com/martini-contrib/sessions"
@@ -117,4 +118,44 @@ func PostSignInHandler(session sessions.Session, userLoggingIn User, r render.Re
 func GetSignOutHandler(session sessions.Session, user sessionauth.User, r render.Render) {
 	sessionauth.Logout(session, user)
 	r.Redirect("/")
+}
+
+func GetUserListHandler(user sessionauth.User, r render.Render, sess *db.Session) {
+	// fetch all records from "persons" table
+	rows, _ := db.Table("users").WithFields("id", "email", "created").Run(sess)
+	var users []User
+	for rows.Next() {
+		var p User
+		err := rows.Scan(&p)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		users = append(users, p)
+	}
+
+	arg_map := map[string]interface{}{"authuser": user, "users": users}
+	r.HTML(200, "users", arg_map)
+}
+
+func GetUserProfileHandler(user sessionauth.User, r render.Render, params martini.Params, sess *db.Session) {
+	id := params["id"]
+	arg_map := map[string]interface{}{"authuser": user}
+
+	row, _ := db.Table("users").Get(id).RunRow(sess)
+	if row.IsNil() {
+		fmt.Println("Not found!")
+		r.HTML(404, "404", arg_map)
+		return
+	}
+
+	var u User
+	err := row.Scan(&u)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	arg_map["currentuser"] = u
+	r.HTML(200, "profile", arg_map)
+
 }
