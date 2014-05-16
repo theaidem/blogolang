@@ -1,6 +1,7 @@
 package user
 
 import (
+	"app/common"
 	"code.google.com/p/go.crypto/bcrypt"
 	"fmt"
 	db "github.com/dancannon/gorethink"
@@ -9,6 +10,7 @@ import (
 	"github.com/martini-contrib/sessionauth"
 	"github.com/martini-contrib/sessions"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -120,9 +122,45 @@ func GetSignOutHandler(session sessions.Session, user sessionauth.User, r render
 	r.Redirect("/")
 }
 
-func GetUserListHandler(user sessionauth.User, r render.Render, sess *db.Session) {
-	// fetch all records from "persons" table
-	rows, _ := db.Table("users").WithFields("id", "email", "created").Run(sess)
+func GetUserListHandler(user sessionauth.User, r render.Render, params martini.Params, sess *db.Session, req *http.Request) {
+	arg_map := map[string]interface{}{"authuser": user}
+
+	// Paginate, todo: to helpers
+	page, ok := params["page"]
+	if !ok {
+		page = "1"
+	}
+
+	curr_page, err := strconv.Atoi(page)
+	if err != nil {
+		fmt.Println(err)
+		r.HTML(404, "404", arg_map)
+		return
+	}
+
+	if curr_page <= 0 {
+		r.HTML(404, "404", arg_map)
+		return
+	}
+
+	row, err := db.Table("users").Count().RunRow(sess)
+	if err != nil {
+		fmt.Println(err)
+		r.HTML(404, "404", arg_map)
+		return
+	}
+	var total_items int
+	err = row.Scan(&total_items)
+
+	if err != nil {
+		fmt.Println(err)
+		r.HTML(404, "404", arg_map)
+		return
+	}
+
+	var pager = common.GetPaginated(total_items, 2, curr_page)
+
+	rows, _ := db.Table("users").WithFields("id", "email", "created").Skip(pager.StartPoint).Limit(pager.PerPage).Run(sess)
 	var users []User
 	for rows.Next() {
 		var p User
@@ -134,11 +172,18 @@ func GetUserListHandler(user sessionauth.User, r render.Render, sess *db.Session
 		users = append(users, p)
 	}
 
-	arg_map := map[string]interface{}{"authuser": user, "users": users}
+	arg_map["users"] = users
+	arg_map["pager"] = pager
 	r.HTML(200, "users", arg_map)
 }
 
+// we'll just wrap a slice of ints
+type items struct {
+	Stuff []string
+}
+
 func GetUserProfileHandler(user sessionauth.User, r render.Render, params martini.Params, sess *db.Session) {
+
 	id := params["id"]
 	arg_map := map[string]interface{}{"authuser": user}
 
@@ -157,5 +202,18 @@ func GetUserProfileHandler(user sessionauth.User, r render.Render, params martin
 	}
 	arg_map["currentuser"] = u
 	r.HTML(200, "profile", arg_map)
+}
+
+func GetUserDeleteHandler(user sessionauth.User, r render.Render, params martini.Params, sess *db.Session) {
+	//arg_map := map[string]interface{}{"authuser": user}
+	query := db.Table("users").Get(params["id"]).Delete()
+	row, err := query.RunWrite(sess)
+	if err != nil {
+		fmt.Println("Wrong query")
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(row)
+	r.Redirect("/users")
 
 }

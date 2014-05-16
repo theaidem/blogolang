@@ -36,7 +36,7 @@
 					</a>
 					<div class="right menu">
 						{{ if .authuser.Email }}
-							<a class="item" href="/users/{{ .authuser.Id }}">
+							<a class="item" href="/user/{{ .authuser.Id }}">
 								<i class="user icon"></i> {{.authuser.Email}}
 							</a>
 							<a class="ui item" href="/signout">

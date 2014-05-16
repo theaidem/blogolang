@@ -1,6 +1,7 @@
+<div>{{printf "%#v" .pager}}</div>
 <div class="ui selection list">
 	{{ range $key, $value := .users }}
-		<a class="item" href="/users/{{$value.Id}}">
+		<a class="item" href="/user/{{$value.Id}}">
 			<i class="circular large user icon"></i>
 			<div class="content">
 				<div class="header">{{ $value.Email}}</div>
@@ -9,4 +10,30 @@
 		</a>
 	{{ end }}
 </div>
+
+{{ $page_number := .pager.PageNumber }}
+{{ $total_pages := .pager.TotalPages }}
+{{ $prev := .pager.PrevPage }}
+{{ $next := .pager.NextPage }}
+{{ $page_list := .pager.PageList }}
+
+<div class="ui pagination menu">
+	<a class="icon item{{ if eq $page_number 1 }} disabled{{end}}"{{ if ne $page_number 1 }} href="/users/{{$prev}}"{{ end }}>
+		<i class="left arrow icon"></i>
+	</a>
+
+	{{ range $p := $page_list }}
+		<a class="item{{ if eq $p $page_number}} active{{end}}" {{ if ne $p $page_number }} href="/users/{{$p}}"{{ end }}>
+			{{$p}}
+		</a>
+	{{ end }}
+	
+	<a class="icon item{{ if eq $page_number $total_pages }} disabled{{end}}"{{ if ne $page_number $total_pages }} href="/users/{{$next}}"{{ end }}>
+		<i class="right arrow icon"></i>
+	</a>
+</div>
+
+
+
+
 

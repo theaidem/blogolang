@@ -3,5 +3,9 @@
 	<div class="content">
 		{{ .currentuser.Email }}
 		<div class="sub header">Joined: {{ .currentuser.Created }}</div>
+		<a class="mini ui button" href="/user/{{ .currentuser.Id }}/delete">delete</a>
 	</div>
 </h2>
+<div>
+	{{ .pager }}
+</div>
