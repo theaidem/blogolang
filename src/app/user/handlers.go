@@ -158,7 +158,7 @@ func GetUserListHandler(user sessionauth.User, r render.Render, params martini.P
 		return
 	}
 
-	var pager = common.GetPaginated(total_items, 2, curr_page)
+	var pager = common.GetPaginated(total_items, 1, curr_page)
 
 	rows, _ := db.Table("users").WithFields("id", "email", "created").Skip(pager.StartPoint).Limit(pager.PerPage).Run(sess)
 	var users []User

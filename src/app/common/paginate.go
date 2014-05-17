@@ -4,6 +4,8 @@ import (
 	"math"
 )
 
+const adjacent = 1
+
 type Paginated struct {
 	TotalItems int
 	PerPage    int
@@ -11,6 +13,10 @@ type Paginated struct {
 	TotalPages int
 	StartPoint int
 	PageList   []int
+	Flat       []int
+	Left       []int
+	Middle     []int
+	Right      []int
 	NextPage   int
 	PrevPage   int
 }
@@ -23,6 +29,26 @@ func GetPaginated(total int, pp int, pn int) *Paginated {
 	next_page := getNextPage(pn, total_pages)
 	prev_page := getPrevPage(pn)
 
+	pure := total_pages / 3
+	repu := (adjacent * 2) + 1
+
+	var left []int = page_list[:2]
+	var right []int = page_list[total_pages-2:]
+	var mid []int
+	var flat []int
+
+	if pure >= repu {
+		if pn <= (adjacent*2)+1 {
+			left = page_list[:pn+adjacent*2]
+		} else if pn >= total_pages-((adjacent*2)+1) {
+			right = page_list[(pn-adjacent*2)-1:]
+		} else {
+			mid = page_list[(pn-adjacent)-1 : (pn + adjacent)]
+		}
+	} else {
+		flat = page_list
+	}
+
 	return &Paginated{
 		TotalItems: total,
 		PerPage:    pp,
@@ -32,6 +58,10 @@ func GetPaginated(total int, pp int, pn int) *Paginated {
 		PageList:   page_list,
 		NextPage:   next_page,
 		PrevPage:   prev_page,
+		Left:       left,
+		Middle:     mid,
+		Right:      right,
+		Flat:       flat,
 	}
 }
 
