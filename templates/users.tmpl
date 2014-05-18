@@ -20,28 +20,20 @@
 {{ $mid := .pager.Middle }}
 {{ $right := .pager.Right }}
 
-<div class="ui pagination menu small">
-	<a class="icon item{{ if eq $page_number 1 }} disabled{{end}}"{{ if ne $page_number 1 }} href="/users/{{$prev}}"{{ end }}>
-		<i class="left arrow icon"></i>
-	</a>
+{{ if  gt $total_pages 1 }}
+	<div class="ui pagination menu small">
+		<a class="icon item{{ if eq $page_number 1 }} disabled{{end}}"{{ if ne $page_number 1 }} href="/users/{{$prev}}"{{ end }}>
+			<i class="left arrow icon"></i>
+		</a>
 
-	{{ if $flat }}
-		{{ range $p := $flat }}
-			<a class="item{{ if eq $p $page_number}} active{{end}}" {{ if ne $p $page_number }} href="/users/{{$p}}"{{ end }}>
-				{{$p}}
-			</a>
-		{{ end }}
-	{{ else }}
-		{{ range $p := $left }}
-			<a class="item{{ if eq $p $page_number}} active{{end}}" {{ if ne $p $page_number }} href="/users/{{$p}}"{{ end }}>
-				{{$p}}
-			</a>
-		{{ end }}
-		<div class="disabled item">
-			...
-		</div>
-		{{ if $mid }}
-			{{ range $p := $mid }}
+		{{ if $flat }}
+			{{ range $p := $flat }}
+				<a class="item{{ if eq $p $page_number}} active{{end}}" {{ if ne $p $page_number }} href="/users/{{$p}}"{{ end }}>
+					{{$p}}
+				</a>
+			{{ end }}
+		{{ else }}
+			{{ range $p := $left }}
 				<a class="item{{ if eq $p $page_number}} active{{end}}" {{ if ne $p $page_number }} href="/users/{{$p}}"{{ end }}>
 					{{$p}}
 				</a>
@@ -49,18 +41,29 @@
 			<div class="disabled item">
 				...
 			</div>
+			{{ if $mid }}
+				{{ range $p := $mid }}
+					<a class="item{{ if eq $p $page_number}} active{{end}}" {{ if ne $p $page_number }} href="/users/{{$p}}"{{ end }}>
+						{{$p}}
+					</a>
+				{{ end }}
+				<div class="disabled item">
+					...
+				</div>
+			{{ end }}
+			{{ range $p := $right }}
+				<a class="item{{ if eq $p $page_number}} active{{end}}" {{ if ne $p $page_number }} href="/users/{{$p}}"{{ end }}>
+					{{$p}}
+				</a>
+			{{ end }}
 		{{ end }}
-		{{ range $p := $right }}
-			<a class="item{{ if eq $p $page_number}} active{{end}}" {{ if ne $p $page_number }} href="/users/{{$p}}"{{ end }}>
-				{{$p}}
-			</a>
-		{{ end }}
-	{{ end }}
 
-	<a class="icon item{{ if eq $page_number $total_pages }} disabled{{end}}"{{ if ne $page_number $total_pages }} href="/users/{{$next}}"{{ end }}>
-		<i class="right arrow icon"></i>
-	</a>
-</div>
+		<a class="icon item{{ if eq $page_number $total_pages }} disabled{{end}}"{{ if ne $page_number $total_pages }} href="/users/{{$next}}"{{ end }}>
+			<i class="right arrow icon"></i>
+		</a>
+	</div>
+{{ end }}
+
 
 
 

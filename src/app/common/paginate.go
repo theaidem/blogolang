@@ -32,12 +32,15 @@ func GetPaginated(total int, pp int, pn int) *Paginated {
 	pure := total_pages / 3
 	repu := (adjacent * 2) + 1
 
-	var left []int = page_list[:2]
-	var right []int = page_list[total_pages-2:]
+	var left []int
+	var right []int
 	var mid []int
 	var flat []int
 
 	if pure >= repu {
+		right = page_list[total_pages-2:]
+		left = page_list[:2]
+
 		if pn <= (adjacent*2)+1 {
 			left = page_list[:pn+adjacent*2]
 		} else if pn >= total_pages-((adjacent*2)+1) {
