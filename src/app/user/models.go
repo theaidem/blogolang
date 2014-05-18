@@ -2,16 +2,22 @@ package user
 
 import (
 	"app/common"
+	//"fmt"
 	db "github.com/dancannon/gorethink"
 	"github.com/martini-contrib/sessionauth"
 	"time"
 )
+
+type Face interface {
+	IsAdmin()
+}
 
 type User struct {
 	Id            string    `form:"-" gorethink:"id,omitempty"`
 	Email         string    `form:"email" gorethink:"email"`
 	Password      string    `form:"password" gorethink:"password"`
 	Created       time.Time `gorethink:"created"`
+	Role          int       `gorethink:"role"`
 	authenticated bool      `form:"-" gorethink:"-"`
 }
 
@@ -35,6 +41,13 @@ func (u *User) Logout() {
 
 func (u *User) IsAuthenticated() bool {
 	return u.authenticated
+}
+
+func (u *User) IsAdmin() bool {
+	if u.Role == 1 {
+		return true
+	}
+	return false
 }
 
 func (u *User) UniqueId() interface{} {

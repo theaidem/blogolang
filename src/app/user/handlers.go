@@ -177,13 +177,7 @@ func GetUserListHandler(user sessionauth.User, r render.Render, params martini.P
 	r.HTML(200, "users", arg_map)
 }
 
-// we'll just wrap a slice of ints
-type items struct {
-	Stuff []string
-}
-
 func GetUserProfileHandler(user sessionauth.User, r render.Render, params martini.Params, sess *db.Session) {
-
 	id := params["id"]
 	arg_map := map[string]interface{}{"authuser": user}
 
@@ -205,15 +199,21 @@ func GetUserProfileHandler(user sessionauth.User, r render.Render, params martin
 }
 
 func GetUserDeleteHandler(user sessionauth.User, r render.Render, params martini.Params, sess *db.Session) {
-	//arg_map := map[string]interface{}{"authuser": user}
-	query := db.Table("users").Get(params["id"]).Delete()
-	row, err := query.RunWrite(sess)
-	if err != nil {
-		fmt.Println("Wrong query")
-		fmt.Println(err)
-		return
+	arg_map := map[string]interface{}{"authuser": user}
+
+	if user.(*User).IsAdmin() {
+		query := db.Table("users").Get(params["id"]).Delete()
+		row, err := query.RunWrite(sess)
+		if err != nil {
+			fmt.Println("Wrong query")
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(row)
+
+		r.Redirect("/users")
+	} else {
+		r.HTML(404, "404", arg_map)
 	}
-	fmt.Println(row)
-	r.Redirect("/users")
 
 }

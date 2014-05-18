@@ -36,7 +36,7 @@
 					</a>
 					<div class="right menu">
 						{{ if .authuser.Email }}
-							<a class="{{ if eq current "profile"}}active {{ end }} item" href="/user/{{ .authuser.Id }}">
+							<a class="{{ if eq current "profile" }}{{ if eq .currentuser.Id .authuser.Id }}active {{ end }}{{ end }} item" href="/user/{{ .authuser.Id }}">
 								<i class="user icon"></i> {{.authuser.Email}}
 							</a>
 							<a class="ui item" href="/signout">
@@ -62,6 +62,7 @@
 		<section class="ui column page grid">
 			<div class="column wide">
 				{{ yield }}
+				<div >{{printf "%#v" .}}</div>
 			</div>
 		</section>
 
