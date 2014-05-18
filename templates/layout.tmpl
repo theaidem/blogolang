@@ -25,28 +25,28 @@
 		<header class="ui one column page grid">
 			<div class="column">
 				<div class="ui secondary  menu">
-					<a class="active item" href="/">
+					<a class="{{ if eq current "home"}}active {{ end }}item" href="/">
 						<i class="home icon"></i> Home
 					</a>
-					<a class="item" href="/users">
+					<a class="{{ if eq current "users"}}active {{ end }} item" href="/users">
 						<i class="users icon"></i> Users
 					</a>
-					<a class="item" href="/about">
+					<a class=" {{ if eq current "about"}}active {{ end }}item" href="/about">
 						<i class="info icon"></i> About
 					</a>
 					<div class="right menu">
 						{{ if .authuser.Email }}
-							<a class="item" href="/user/{{ .authuser.Id }}">
+							<a class="{{ if eq current "profile"}}active {{ end }} item" href="/user/{{ .authuser.Id }}">
 								<i class="user icon"></i> {{.authuser.Email}}
 							</a>
 							<a class="ui item" href="/signout">
 								Signout
 							</a>
 						{{ else }}
-							<a class="ui item" href="/signin">
+							<a class="{{ if eq current "signin"}}active {{ end }}ui item" href="/signin">
 								Signin
 							</a>						
-							<a class="ui item" href="/signup">
+							<a class="{{ if eq current "signup"}}active {{ end }}ui item" href="/signup">
 								Signup
 							</a>
 						{{ end }}
